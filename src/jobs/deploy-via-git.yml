@@ -1,7 +1,5 @@
 description: >
-  Replace this text with a description for this command.
-  # What will this command do?
-  # Descriptions should be short, simple, and clear.
+  Quickly and easily take the changes to this branch and deploy them to Heroku automatically with this job.
 parameters:
   app-name:
     description:

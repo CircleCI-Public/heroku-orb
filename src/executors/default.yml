@@ -1,11 +1,11 @@
 description: >
-  Uses the basic buildpack-deps image, which has the prerequisites for installing heroku's CLI.
+  A highly efficient and cached Ubuntu-based image. Consider using this executor or selecting an image for your language https://hub.docker.com/r/cimg/
 docker:
-  - image: 'buildpack-deps:<<parameters.tag>>'
+  - image: 'cimg:base/<<parameters.tag>>'
 parameters:
   tag:
-    default: bionic
+    default: stable
     description: >
-      Pick a specific circleci/node image variant:
-      https://hub.docker.com/r/circleci/node/tags
+      Pick a specific cimg/base tag:
+      https://hub.docker.com/r/cimg/base/tags
     type: string
