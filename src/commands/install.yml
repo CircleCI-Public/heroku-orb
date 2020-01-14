@@ -2,7 +2,7 @@ description: >
   Download and install the Heroku CLI. Will be skipped if the CLI is already installed in the system.
 steps:
   - run:
-      name: Install Heroku CLI, if necessary
+      name: Install Heroku CLI (If not installed)
       command: |
         if [[ $(command -v heroku) == "" ]]; then
           curl https://cli-assets.heroku.com/install.sh | sh

@@ -1,9 +1,9 @@
 description: >
-  Customize your Heroku flow using the commands from this orb
+  'A simple example of a job utilizing the `install` and `deploy-via-git` commands.'
 usage:
   version: 2.1
   orbs:
-    heroku: circleci/heroku@1.0.0
+    heroku: circleci/heroku@x.y
 
   workflows:
     heroku_deploy:
@@ -17,5 +17,7 @@ usage:
       steps:
         - checkout
         - heroku/install
-        - heroku/deploy-via-git:
-            only-branch: master
+        - run:
+            command: |
+              echo "The command above installs Heroku, the command below deploys. What you do inbetween is up to you!"
+        - heroku/deploy-via-git
