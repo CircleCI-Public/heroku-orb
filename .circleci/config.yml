@@ -30,7 +30,7 @@ jobs:
       - checkout
       - heroku/install
       - run:
-          name: Install Heroku CLI (If not installed)
+          name: Check if Heroku is installed
           command: |
             if [[ $(command -v heroku) == "" ]]; then
               echo " Heroku is not installed! "; exit 1;
