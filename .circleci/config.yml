@@ -28,7 +28,15 @@ jobs:
     executor: orb-tools/ubuntu
     steps:
       - checkout
-    # - your-orb/your-orb-command
+      - heroku/install
+      - run:
+          name: Install Heroku CLI (If not installed)
+          command: |
+            if [[ $(command -v heroku) == "" ]]; then
+              echo " Heroku is not installed! "; exit 1;
+            else
+              echo Heroku successfully installed.
+            fi
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
