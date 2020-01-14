@@ -37,7 +37,7 @@ steps:
   - when:
       condition: << parameters.maintenance-mode >>
       steps:
-        - run: 
+        - run:
             name: Turn ON maintenance mode.
             command: heroku maintenance:on --app << parameters.app-name >>
   - run:
@@ -51,6 +51,6 @@ steps:
   - when:
       condition: << parameters.maintenance-mode >>
       steps:
-        - run: 
+        - run:
             name: Turn OFF maintenance mode.
             command: heroku maintenance:off --app << parameters.app-name >>
