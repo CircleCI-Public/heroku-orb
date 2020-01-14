@@ -1,0 +1,41 @@
+description: >
+  Replace this text with a description for this command.
+  # What will this command do?
+  # Descriptions should be short, simple, and clear.
+parameters:
+  app-name:
+    description:
+      "The name of your Heroku App.
+      For backwards compatibility the literal value
+      `$HEROKU_APP_NAME` is the default, so you can
+      easily use this command by setting an environment
+      variable called HEROKU_APP_NAME"
+    type: string
+    default: $HEROKU_APP_NAME
+  maintenance-mode:
+    description:
+      "Use this to automatically enable mantainance mode before pre-deploy steps
+        and have it disabled after post-deploy steps have been run."
+    type: boolean
+    default: false
+  pre-deploy:
+    description:
+      "A list of pre-deploy steps that are run before deployment. This would
+        be an ideal place to scale any processes down."
+    type: steps
+    default: []
+  post-deploy:
+    description:
+      "A list of post-deploy steps that are run after deployment. This would
+        be an ideal place to scale any processes back up."
+    type: steps
+    default: []
+executor: default
+steps:
+  - install
+  - checkout
+  - steps: << parameters.pre-deploy >>
+  - deploy-via-git:
+      app-name: << parameters.app-name >>
+      maintenance-mode: << parameters.maintenance-mode >>
+  - steps: << parameters.post-deploy >>

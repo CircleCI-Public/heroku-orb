@@ -1,0 +1,21 @@
+description: >
+  Customize your Heroku flow using the commands from this orb
+usage:
+  version: 2.1
+  orbs:
+    heroku: circleci/heroku@1.0.0
+
+  workflows:
+    heroku_deploy:
+      jobs:
+        - deploy
+
+  jobs:
+    deploy:
+      executor:
+        heroku/default
+      steps:
+        - checkout
+        - heroku/install
+        - heroku/deploy-via-git:
+            only-branch: master

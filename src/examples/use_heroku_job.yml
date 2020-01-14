@@ -1,0 +1,11 @@
+description: >
+  Use this orb's deploy-via-git job to deploy to Heroku in one simple go
+usage:
+  version: 2.1
+  orbs:
+    heroku: circleci/heroku@1.0.0
+
+  workflows:
+    heroku_deploy:
+      jobs:
+        - heroku/deploy-via-git
