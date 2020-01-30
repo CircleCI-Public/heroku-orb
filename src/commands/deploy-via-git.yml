@@ -1,0 +1,56 @@
+description: >
+  Replace this text with a description for this command.
+  # What will this command do?
+  # Descriptions should be short, simple, and clear.
+parameters:
+  app-name:
+    description:
+      "The name of your Heroku App.
+      For backwards compatibility the literal value
+      `$HEROKU_APP_NAME` is the default, so you can
+      easily use this command by setting an environment
+      variable called HEROKU_APP_NAME"
+    type: string
+    default: $HEROKU_APP_NAME
+  maintenance-mode:
+    description: Use this to automatically enable maintenance mode before pre-deploy steps and have it disabled after post-deploy steps have been run.
+    type: boolean
+    default: false
+  api-key:
+    description: The name of the environment variable containing your Heroku API Key.
+    type: env_var_name
+    default: HEROKU_API_KEY
+  branch:
+    type: string
+    description: Deploy the given branch. The default value is your current branch.
+    default: "$CIRCLE_BRANCH"
+  force:
+    type: boolean
+    description: Whether or not to force the git push (i.e. `git push -f`). Defaults to false.
+    default: false
+  no_output_timeout:
+    type: string
+    description:
+      "Allows you to specify the no_output_timeout for the `git push` to heroku. Defaults to 10m."
+    default: "10m"
+steps:
+  - when:
+      condition: << parameters.maintenance-mode >>
+      steps:
+        - run:
+            name: Turn ON maintenance mode.
+            command: heroku maintenance:on --app << parameters.app-name >>
+  - run:
+      no_output_timeout: << parameters.no_output_timeout >>
+      name: Deploy branch to Heroku via git push
+      command: |
+        if << parameters.force >>;then
+          force="-f"
+        fi
+        git push $force https://heroku:$<< parameters.api-key >>@git.heroku.com/<< parameters.app-name >>.git << parameters.branch >>:master
+  - when:
+      condition: << parameters.maintenance-mode >>
+      steps:
+        - run:
+            name: Turn OFF maintenance mode.
+            command: heroku maintenance:off --app << parameters.app-name >>

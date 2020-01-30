@@ -1,14 +1,11 @@
-# How to author Executors: https://circleci.com/docs/2.0/reusing-config/#authoring-reusable-executors
 description: >
-  This is a sample executor using Docker and Node.
-  # What is this executor?
-  # Descriptions should be short, simple, and clear.
+  A highly efficient and cached Ubuntu-based image. Consider using this executor or selecting an image for your language https://hub.docker.com/r/cimg/
 docker:
-  - image: 'circleci/node:<<parameters.tag>>'
+  - image: 'cimg:base/<<parameters.tag>>'
 parameters:
   tag:
-    default: latest
+    default: stable
     description: >
-      Pick a specific circleci/node image variant:
-      https://hub.docker.com/r/circleci/node/tags
+      Pick a specific cimg/base tag:
+      https://hub.docker.com/r/cimg/base/tags
     type: string

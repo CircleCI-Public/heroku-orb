@@ -1,0 +1,23 @@
+description: >
+  'A simple example of a job utilizing the `install` and `deploy-via-git` commands.'
+usage:
+  version: 2.1
+  orbs:
+    heroku: circleci/heroku@x.y
+
+  workflows:
+    heroku_deploy:
+      jobs:
+        - deploy
+
+  jobs:
+    deploy:
+      executor:
+        heroku/default
+      steps:
+        - checkout
+        - heroku/install
+        - run:
+            command: |
+              echo "The command above installs Heroku, the command below deploys. What you do inbetween is up to you!"
+        - heroku/deploy-via-git
