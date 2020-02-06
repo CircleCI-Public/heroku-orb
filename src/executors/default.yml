@@ -1,7 +1,7 @@
 description: >
   A highly efficient and cached Ubuntu-based image. Consider using this executor or selecting an image for your language https://hub.docker.com/r/cimg/
 docker:
-  - image: 'cimg:base/<<parameters.tag>>'
+  - image: 'cimg/base:<<parameters.tag>>'
 parameters:
   tag:
     default: stable
