@@ -1,5 +1,5 @@
 description: >
-  Quickly and easily take the changes to this branch and deploy them to Heroku automatically with this job.
+  Quickly and easily take the changes to this branch or tag and deploy them to Heroku automatically with this job.
 parameters:
   app-name:
     description:
