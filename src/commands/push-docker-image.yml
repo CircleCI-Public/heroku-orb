@@ -1,0 +1,40 @@
+description: >
+  Push a Docker image to the Heroku Docker registry.
+parameters:
+  app-name:
+    description:
+      "The name of your Heroku App.
+      For backwards compatibility the literal value
+      `$HEROKU_APP_NAME` is the default, so you can
+      easily use this command by setting an environment
+      variable called HEROKU_APP_NAME"
+    type: string
+    default: $HEROKU_APP_NAME
+  process-type:
+    description: Process type.
+    type: string
+    default: ""
+  recursive:
+    description: Push all Dockerfiles in the directory to Heroku.
+    type: boolean
+    default: false
+  api-key:
+    description: The name of the environment variable containing your Heroku API Key.
+    type: env_var_name
+    default: HEROKU_API_KEY
+  no_output_timeout:
+    type: string
+    description:
+      "Allows you to specify the no_output_timeout for the `git push` to heroku. Defaults to 10m."
+    default: "10m"
+steps:
+  - run:
+      name: Login to Heroku Docker image registry
+      command: heroku container:login
+  - run:
+      no_output_timeout: << parameters.no_output_timeout >>
+      name: Push Docker image to Heroku
+      command: | 
+        heroku container:push -a <<parameters.app-name>> \
+        <<# parameters.recursive >>--recursive<</ parameters.recursive >>
+        <<# parameters.process-type>><<parameters.process-type>><</ parameters.process-type>>
