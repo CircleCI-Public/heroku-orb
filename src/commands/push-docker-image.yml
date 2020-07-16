@@ -34,7 +34,7 @@ steps:
   - run:
       no_output_timeout: << parameters.no_output_timeout >>
       name: Push Docker image to Heroku
-      command: | 
+      command: |
         heroku container:push -a <<parameters.app-name>> \
         <<# parameters.recursive >>--recursive<</ parameters.recursive >>
         <<# parameters.process-type>><<parameters.process-type>><</ parameters.process-type>>
