@@ -10,8 +10,8 @@ parameters:
       variable called HEROKU_APP_NAME"
     type: string
     default: $HEROKU_APP_NAME
-  process-type:
-    description: Process type.
+  process-types:
+    description: Process types.
     type: string
     default: ""
   recursive:
@@ -37,4 +37,4 @@ steps:
       command: |
         heroku container:push -a <<parameters.app-name>> \
         <<# parameters.recursive >>--recursive<</ parameters.recursive >>
-        <<# parameters.process-type>><<parameters.process-type>><</ parameters.process-type>>
+        <<# parameters.process-types>><<parameters.process-types>><</ parameters.process-types>>

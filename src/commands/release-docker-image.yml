@@ -10,9 +10,10 @@ parameters:
       variable called HEROKU_APP_NAME"
     type: string
     default: $HEROKU_APP_NAME
-  process-type:
-    description: Process type.
+  process-types:
+    description: Process types.
     type: string
+    default: "web"
   api-key:
     description: The name of the environment variable containing your Heroku API Key.
     type: env_var_name
