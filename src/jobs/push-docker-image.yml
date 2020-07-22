@@ -34,7 +34,10 @@ steps:
   - check-authentication
   - checkout
   - steps: << parameters.pre-deploy >>
-  - deploy-via-git:
+  - push-docker-image:
       app-name: << parameters.app-name >>
-      maintenance-mode: << parameters.maintenance-mode >>
+      process-types: web
+  - release-docker-image:
+      app-name: << parameters.app-name >>
+      process-types: web
   - steps: << parameters.post-deploy >>
