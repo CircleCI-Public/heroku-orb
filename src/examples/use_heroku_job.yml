@@ -8,4 +8,8 @@ usage:
   workflows:
     heroku_deploy:
       jobs:
-        - heroku/deploy-via-git
+        - heroku/deploy-via-git:
+            pre-steps:
+              - run: command-that-run-before-deploying
+            post-steps:
+              - run: your-database-migration-command
