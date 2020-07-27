@@ -23,7 +23,7 @@ parameters:
   branch:
     type: string
     description: Deploy the given branch. The default value is your current branch.
-    default: "$CIRCLE_BRANCH"
+    default: "refs/heads/$CIRCLE_BRANCH"
   force:
     type: boolean
     description: Whether or not to force the git push (i.e. `git push -f`). Defaults to false.
@@ -47,7 +47,7 @@ steps:
         if << parameters.force >>;then
           force="-f"
         fi
-        git push $force https://heroku:$<< parameters.api-key >>@git.heroku.com/<< parameters.app-name >>.git << parameters.branch >>:master
+        git push $force https://heroku:$<< parameters.api-key >>@git.heroku.com/<< parameters.app-name >>.git << parameters.branch >>:refs/heads/master
   - when:
       condition: << parameters.maintenance-mode >>
       steps:
