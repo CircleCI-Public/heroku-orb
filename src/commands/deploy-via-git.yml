@@ -54,9 +54,9 @@ steps:
 
         heroku_url="https://heroku:$<< parameters.api-key >>@git.heroku.com/<< parameters.app-name >>.git"
 
-        if [ -z "<< parameters.branch >>" ]; then
+        if [ -n "<< parameters.branch >>" ]; then
           git push $force $heroku_url << parameters.branch >>:master
-        elif [ -z "<< parameters.tag >>" ]; then
+        elif [ -n "<< parameters.tag >>" ]; then
           git push $force $heroku_url << parameters.tag >>^{}:master
         else
           echo "No branch or tag found."
