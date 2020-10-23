@@ -1,20 +1,10 @@
 # heroku Orb [![CircleCI Build Status](https://circleci.com/gh/CircleCI-Public/heroku-orb.svg?style=shield "CircleCI Build Status")](https://circleci.com/gh/CircleCI-Public/heroku-orb) [![CircleCI Orb Version](https://img.shields.io/badge/endpoint.svg?url=https://badges.circleci.io/orb/circleci/heroku)](https://circleci.com/orbs/registry/orb/circleci/heroku) [![GitHub License](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://raw.githubusercontent.com/CircleCI-Public/heroku-orb/master/LICENSE) [![CircleCI Community](https://img.shields.io/badge/community-CircleCI%20Discuss-343434.svg)](https://discuss.circleci.com/c/ecosystem/orbs)
 
-A description of your orb. Utilize this orb to easily add X to your CI/CD pipeline.
-
-**TODO:**
-Publish your production orb! You may notice the badges above and links to the registry page below are not working yet, once you publish your first production version orb, these will begin to function.
-
-What to do:
-* Make changes to your `Alpha` branch.
-* Flush out your integration test jobs
-* Merge to `master` with "`[semver:major]`" in the commit subject to publish 1.0.0 of your orb.
-
+Easily install and use the Heroku CLI with CircleCI to build, test, and deploy your applications to Heroku.
 
 ## Usage
 
 Example use-cases are provided on the orb [registry page](https://circleci.com/orbs/registry/orb/circleci/heroku#usage-examples). Source for these examples can be found within the `src/examples` directory.
-
 
 ## Resources
 
