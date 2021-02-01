@@ -36,5 +36,5 @@ steps:
       name: Push Docker image to Heroku
       command: |
         heroku container:push -a <<parameters.app-name>> \
-        <<# parameters.recursive >>--recursive<</ parameters.recursive >>
+        <<# parameters.recursive >>--recursive<</ parameters.recursive >> \
         <<# parameters.process-types>><<parameters.process-types>><</ parameters.process-types>>
