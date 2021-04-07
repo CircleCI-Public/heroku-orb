@@ -43,7 +43,7 @@ jobs:
   integration-test-deploy:
     executor: heroku/default
     steps:
-      - run: git clone --depth 1 https://github.com/CircleCI-Public/sample-python-cfd.git --branch master
+      - run: git clone --depth 1 https://github.com/CircleCI-Public/sample-python-cfd.git --branch main
       - heroku/deploy-via-git:
           force: true
           app-name: sample-python-cfd
