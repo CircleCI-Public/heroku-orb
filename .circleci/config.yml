@@ -4,7 +4,7 @@ version: 2.1
 # release must exist.);
 orbs:
   heroku: circleci/heroku@<<pipeline.parameters.dev-orb-version>>
-  orb-tools: circleci/orb-tools@9.0
+  orb-tools: circleci/orb-tools@10
 
 # Pipeline parameters
 parameters:
