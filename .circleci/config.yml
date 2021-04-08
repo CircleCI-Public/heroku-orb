@@ -3,17 +3,20 @@ version: 2.1
 # add your orb below, to be used in integration tests (note: a @dev:alpha
 # release must exist.);
 orbs:
-  heroku: circleci/heroku@dev:alpha
-  orb-tools: circleci/orb-tools@9.0
+  heroku: circleci/heroku@<<pipeline.parameters.dev-orb-version>>
+  orb-tools: circleci/orb-tools@10
 
 # Pipeline parameters
 parameters:
-  # These pipeline parameters are required by the "trigger-integration-tests-workflow"
-  # job, by default.
   run-integration-tests:
+    description: An internal flag to prevent integration test from running before a development version has been created.
     type: boolean
     default: false
   dev-orb-version:
+    description: >
+      The development version of the orb to test.
+      This value is automatically adjusted by the "trigger-integration-tests-workflow" job to correspond with the specific version created by the commit and should not be edited.
+      A "dev:alpha" version must exist for the initial pipeline run.
     type: string
     default: "dev:alpha"
 
@@ -37,6 +40,19 @@ jobs:
             else
               echo Heroku successfully installed.
             fi
+  integration-test-deploy:
+    executor: heroku/default
+    steps:
+      - run:
+          name: Setup sample project
+          command: |
+            git clone --depth 1 https://github.com/CircleCI-Public/sample-python-cfd.git --branch main ~/project
+            git branch $CIRCLE_BRANCH
+      - heroku/install
+      - heroku/check-authentication
+      - heroku/deploy-via-git:
+          force: true
+          app-name: sample-python-cfd
 
 workflows:
   # This `lint-pack_validate_publish-dev` workflow will run on any commit.
@@ -83,6 +99,8 @@ workflows:
 
       # an example job
       - integration-test-1
+      - integration-test-deploy:
+          context: heroku-orb
 
       # publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
@@ -100,6 +118,7 @@ workflows:
           publish-version-tag: false
           requires:
             - integration-test-1
+            - integration-test-deploy
           filters:
             branches:
               only: master
