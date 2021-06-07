@@ -1,0 +1,14 @@
+description: >
+  Deploys a new review app. Artifacts for creating the review should be saved
+  in a prior step.
+
+parameters:
+  artifact-pattern:
+    type: string
+    description: RegEx or filename of artifact to deploy to Heroku.
+  pipeline:
+    type: string
+    description: Heroku pipeline to dpeloy with (UUID).
+
+steps:
+  - run: <<include(scripts/create-review.sh)>>
