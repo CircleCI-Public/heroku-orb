@@ -32,6 +32,10 @@ parameters:
     type: boolean
     description: Whether or not to force the git push (i.e. `git push -f`). Defaults to false.
     default: false
+  skip-deploy:
+    type: boolean
+    description: Whether or not to deploy to heroku (i.e Conditional Deploy). Defaults to false.
+    default: false
   no_output_timeout:
     type: string
     description:
@@ -54,13 +58,19 @@ steps:
 
         heroku_url="https://heroku:$<< parameters.api-key >>@git.heroku.com/<< parameters.app-name >>.git"
 
-        if [ -n "<< parameters.branch >>" ]; then
-          git push $force $heroku_url << parameters.branch >>:main
-        elif [ -n "<< parameters.tag >>" ]; then
-          git push $force $heroku_url << parameters.tag >>^{}:main
+        if [[ << parameters.skip-deploy >> == "false" ]]; then
+          if [ -n "<< parameters.branch >>" ]; then
+            git push $force $heroku_url << parameters.branch >>:main
+          elif [ -n "<< parameters.tag >>" ]; then
+            git push $force $heroku_url << parameters.tag >>^{}:main
+          else
+            echo "No branch or tag found."
+            exit 1
+          fi
+        elif [[ << parameters.skip-deploy >> == "true" ]]; then
+          echo "Deployment to Heroku App will be skipped, as skip-deploy is set to true"
         else
-          echo "No branch or tag found."
-          exit 1
+          echo "Deployment to Heroku App will be skipped, as skip-deploy is not set to false"
         fi
   - when:
       condition: << parameters.maintenance-mode >>

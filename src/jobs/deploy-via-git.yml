@@ -44,6 +44,10 @@ parameters:
     type: boolean
     description: Whether or not to force the git push (i.e. `git push -f`). Defaults to false.
     default: false
+  skip-deploy:
+    type: boolean
+    description: Whether or not to deploy to heroku (i.e Conditional Deploy). Defaults to false.
+    default: false
   no_output_timeout:
     type: string
     description:
@@ -62,5 +66,6 @@ steps:
       branch: << parameters.branch >>
       tag: << parameters.tag >>
       force: << parameters.force >>
+      skip-deploy: << parameters.skip-deploy >>
       no_output_timeout: << parameters.no_output_timeout >>
   - steps: << parameters.post-deploy >>
