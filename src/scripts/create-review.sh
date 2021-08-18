@@ -1,11 +1,3 @@
-#!/bin/bash
-CIRCLE_PROJECT_USERNAME="gmemstr"
-CIRCLE_PROJECT_REPONAME="circleci-koans"
-CIRCLE_BUILD_NUM="936"
-CIRCLE_API_KEY="47c67f9ab3a08d0cfe047afe881bba83d4aebf32"
-ARTIFACT_PATTERN="*-2"
-ARTIFACT_LOCATION=""
-
 function get_artifacts {
   artifact_request=$(curl --request GET \
       --url "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts" \
@@ -39,4 +31,4 @@ function create {
 }
 
 get_artifacts
-# create
+create

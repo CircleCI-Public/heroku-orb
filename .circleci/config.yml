@@ -40,6 +40,23 @@ jobs:
             else
               echo Heroku successfully installed.
             fi
+  integration-test-review:
+    executor: heroku/default
+    steps:
+      - run:
+          name: Setup sample project
+          command: |
+            git clone --depth 1 https://github.com/CircleCI-Public/sample-python-cfd.git --branch main ~/project
+            git branch $CIRCLE_BRANCH
+      - run:
+          name: Bundle sample project
+          working_directory: ~/
+          command: tar -czvf sample-python-cfd.tar.gz ~/project
+      - store_artifacts:
+          path: ~/sample-python-cfd.tar.gz
+      - heroku/create-review:
+          artifact-pattern: ".tar.gz"
+          pipeline: 389303dc-8a12-4f25-b943-8f7c6dbbdcaa
   integration-test-deploy:
     executor: heroku/default
     steps:
