@@ -1,7 +1,7 @@
 function get_artifacts {
   artifact_request=$(curl --request GET \
       --url "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts" \
-      --header "Circle-Token: ${ARTIFACT_CIRCLE_TOKEN}")
+      --header "Circle-Token: ${ARTIFACT_CIRCLE_TOKEN}" --fail-with-body -s)
 
   for row in $(echo "${artifact_request}" | jq -c '.items[]'); do
     _jq() {
@@ -18,18 +18,19 @@ function get_artifacts {
 }
 
 function create {
-  curl -n -X POST 'https://api.heroku.com/review-apps' \
-  -d "{
-    \"branch\": \"${CIRCLE_BRANCH}\",
-    \"pipeline\": \"${HEROKU_PIPELINE}\",
-    \"source_blob\": {
-      \"url\": \"${ARTIFACT_LOCATION}?circle-token=${ARTIFACT_CIRCLE_TOKEN}\",
-      \"version\": \"${CIRCLE_SHA1}\"
-    }
-  }" \
-  -H "Content-Type: application/json" \
-  -H "Accept: application/vnd.heroku+json; version=3" \
-  -H "Authorization: Bearer ${HEROKU_API_KEY}"
+  heroku_request=$(curl -n -X POST 'https://api.heroku.com/review-apps' \
+    -d "{
+      \"branch\": \"${CIRCLE_BRANCH}\",
+      \"pipeline\": \"${HEROKU_PIPELINE}\",
+      \"source_blob\": {
+        \"url\": \"${ARTIFACT_LOCATION}?circle-token=${ARTIFACT_CIRCLE_TOKEN}\",
+        \"version\": \"${CIRCLE_SHA1}\"
+      }
+    }" \
+    -H "Content-Type: application/json" \
+    -H "Accept: application/vnd.heroku+json; version=3" \
+    -H "Authorization: Bearer ${HEROKU_API_KEY}" \
+    --fail-with-body -s)
 }
 
 get_artifacts
