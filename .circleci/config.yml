@@ -55,7 +55,7 @@ jobs:
       - store_artifacts:
           path: ~/sample-python-cfd.tar.gz
       - heroku/create-review:
-          artifact-pattern: ".tar.gz"
+          artifact-pattern: "*.tar.gz"
           pipeline: 389303dc-8a12-4f25-b943-8f7c6dbbdcaa
           circleci-api-key: CIRCLE_TOKEN
   integration-test-deploy:

@@ -12,6 +12,8 @@ function get_artifacts {
       echo "Using ${ARTIFACT_LOCATION} as artifact."
       return 0
     fi
+    echo "No artifacts found!"
+    return 1
   done
 }
 
