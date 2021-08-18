@@ -118,7 +118,8 @@ workflows:
       - integration-test-1
       - integration-test-deploy:
           context: heroku-orb
-
+      - integration-test-review:
+          context: heroku-orb
       # publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
       # as that will determine whether a patch, minor or major
