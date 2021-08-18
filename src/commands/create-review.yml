@@ -16,6 +16,7 @@ parameters:
 steps:
   - run:
       command: <<include(scripts/create-review.sh)>>
+      name: Create new Heroku Review app
       environment:
         HEROKU_API_KEY: $<<parameters.heroku-api-key>>
         ARTIFACT_PATTERN: <<parameters.artifact-pattern>>
