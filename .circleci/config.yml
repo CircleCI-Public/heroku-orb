@@ -57,6 +57,7 @@ jobs:
       - heroku/create-review:
           artifact-pattern: ".tar.gz"
           pipeline: 389303dc-8a12-4f25-b943-8f7c6dbbdcaa
+          circleci-api-key: CIRCLE_TOKEN
   integration-test-deploy:
     executor: heroku/default
     steps:
@@ -119,7 +120,9 @@ workflows:
       - integration-test-deploy:
           context: heroku-orb
       - integration-test-review:
-          context: heroku-orb
+          context: 
+            - heroku-orb
+            - orb-publisher
       # publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
       # as that will determine whether a patch, minor or major
