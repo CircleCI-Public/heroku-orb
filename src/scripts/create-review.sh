@@ -1,7 +1,7 @@
 function get_artifacts {
   artifact_request=$(curl --request GET \
       --url "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts" \
-      --header "Circle-Token: ${ARTIFACT_CIRCLE_TOKEN}" --fail-with-body -s)
+      --header "Circle-Token: ${ARTIFACT_CIRCLE_TOKEN}")
 
   for row in $(echo "${artifact_request}" | jq -c '.items[]'); do
     _jq() {
@@ -29,8 +29,9 @@ function create {
     }" \
     -H "Content-Type: application/json" \
     -H "Accept: application/vnd.heroku+json; version=3" \
-    -H "Authorization: Bearer ${HEROKU_API_KEY}" \
-    --fail-with-body -s)
+    -H "Authorization: Bearer ${HEROKU_API_KEY}")
+
+  echo $heroku_request | jq -C
 }
 
 get_artifacts
