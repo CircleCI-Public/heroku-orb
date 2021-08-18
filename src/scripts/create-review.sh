@@ -27,7 +27,7 @@ function create {
   }" \
   -H "Content-Type: application/json" \
   -H "Accept: application/vnd.heroku+json; version=3" \
-  -H "Authorization: Bearer ${HEROKU_TOKEN}"
+  -H "Authorization: Bearer ${HEROKU_API_KEY}"
 }
 
 get_artifacts

@@ -9,6 +9,14 @@ parameters:
   pipeline:
     type: string
     description: Heroku pipeline to dpeloy with (UUID).
-
+  heroku-api-key:
+    type: env_var_name
+    description: Environment variable containing the Heroku API key
+    default: HEROKU_API_KEY
 steps:
-  - run: <<include(scripts/create-review.sh)>>
+  - run:
+      command: <<include(scripts/create-review.sh)>>
+      environment:
+        HEROKU_API_KEY: $<<parameters.heroku-api-key>>
+        ARTIFACT_PATTERN: <<parameters.artifact-pattern>>
+        HEROKU_PIPELINE: <<parameters.pipeline>>
