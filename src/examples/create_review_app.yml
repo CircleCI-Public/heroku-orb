@@ -13,7 +13,7 @@ usage:
         - create-review-app:
             filters:
               branches:
-                not: main
+                ignore: main
 
   jobs:
     create-review-app:
