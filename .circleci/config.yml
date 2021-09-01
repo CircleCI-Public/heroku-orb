@@ -40,6 +40,24 @@ jobs:
             else
               echo Heroku successfully installed.
             fi
+  integration-test-review:
+    executor: heroku/default
+    steps:
+      - run:
+          name: Setup sample project
+          command: |
+            git clone --depth 1 https://github.com/CircleCI-Public/sample-python-cfd.git --branch main ~/project
+            git branch $CIRCLE_BRANCH
+      - run:
+          name: Bundle sample project
+          working_directory: ~/
+          command: tar -czvf sample-python-cfd.tar.gz ~/project
+      - store_artifacts:
+          path: ~/sample-python-cfd.tar.gz
+      - heroku/create-review:
+          artifact-pattern: "*.tar.gz"
+          pipeline: 389303dc-8a12-4f25-b943-8f7c6dbbdcaa
+          circleci-api-key: CIRCLE_TOKEN
   integration-test-deploy:
     executor: heroku/default
     steps:
@@ -101,7 +119,10 @@ workflows:
       - integration-test-1
       - integration-test-deploy:
           context: heroku-orb
-
+      - integration-test-review:
+          context:
+            - heroku-orb
+            - orb-publisher
       # publish a semver version of the orb. relies on
       # the commit subject containing the text "[semver:patch|minor|major|skip]"
       # as that will determine whether a patch, minor or major

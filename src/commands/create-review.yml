@@ -1,0 +1,28 @@
+description: >
+  Deploys a new review app. Artifacts for creating the review should be saved
+  in a prior step.
+
+parameters:
+  artifact-pattern:
+    type: string
+    description: RegEx or filename of artifact to deploy to Heroku.
+  pipeline:
+    type: string
+    description: Heroku pipeline to dpeloy with (UUID).
+  heroku-api-key:
+    type: env_var_name
+    description: Environment variable containing the Heroku API key
+    default: HEROKU_API_KEY
+  circleci-api-key:
+    type: env_var_name
+    description: Environment variable containing the Heroku API key
+    default: CIRCLECI_API_KEY
+steps:
+  - run:
+      command: <<include(scripts/create-review.sh)>>
+      name: Create new Heroku Review app
+      environment:
+        C_API_KEY: $<<parameters.circleci-api-key>>
+        API_KEY: $<<parameters.heroku-api-key>>
+        ARTIFACT_PATTERN: <<parameters.artifact-pattern>>
+        HEROKU_PIPELINE: <<parameters.pipeline>>

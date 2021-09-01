@@ -1,0 +1,31 @@
+description: >
+  A sample job that deploys a review app to Herou, that does not run on the main
+  "deployed" branch. Assumes that your CircleCI token is stored in $CIRCLECI_API_KEY
+  and Heroku's API key under $HEROKU_API_KEY.
+usage:
+  version: 2.1
+  orbs:
+    heroku: circleci/heroku@x.y
+
+  workflows:
+    heroku_review:
+      jobs:
+        - create-review-app:
+            filters:
+              branches:
+                ignore: main
+
+  jobs:
+    create-review-app:
+      executor: heroku/default
+      steps:
+        - checkout
+        - run:
+            name: Bundle our project project
+            working_directory: ~/
+            command: tar -czvf my-project.tar.gz ~/project
+        - store_artifacts:
+            path: ~/my-project.tar.gz
+        - heroku/create-review:
+            artifact-pattern: "*.tar.gz"
+            pipeline: PIPELINE-UUID
