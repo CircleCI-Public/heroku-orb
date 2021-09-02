@@ -58,7 +58,7 @@ steps:
 
         heroku_url="https://heroku:$<< parameters.api-key >>@git.heroku.com/<< parameters.app-name >>.git"
 
-        if [[ << parameters.skip-deploy >> == "false" ]]; then
+        if [[ "<< parameters.skip-deploy >>" == "false" ]]; then
           if [ -n "<< parameters.branch >>" ]; then
             git push $force $heroku_url << parameters.branch >>:main
           elif [ -n "<< parameters.tag >>" ]; then
@@ -67,7 +67,7 @@ steps:
             echo "No branch or tag found."
             exit 1
           fi
-        elif [[ << parameters.skip-deploy >> == "true" ]]; then
+        elif [[ "<< parameters.skip-deploy >>" == "true" ]]; then
           echo "Deployment to Heroku App will be skipped, as skip-deploy is set to true"
         else
           echo "Deployment to Heroku App will be skipped, as skip-deploy is not set to false"
