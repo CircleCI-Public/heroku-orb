@@ -1,145 +1,35 @@
 version: 2.1
-
-# add your orb below, to be used in integration tests (note: a @dev:alpha
-# release must exist.);
+setup: true
 orbs:
-  heroku: circleci/heroku@<<pipeline.parameters.dev-orb-version>>
-  orb-tools: circleci/orb-tools@10
+  orb-tools: circleci/orb-tools@11.1
+  shellcheck: circleci/shellcheck@3.1
 
-# Pipeline parameters
-parameters:
-  run-integration-tests:
-    description: An internal flag to prevent integration test from running before a development version has been created.
-    type: boolean
-    default: false
-  dev-orb-version:
-    description: >
-      The development version of the orb to test.
-      This value is automatically adjusted by the "trigger-integration-tests-workflow" job to correspond with the specific version created by the commit and should not be edited.
-      A "dev:alpha" version must exist for the initial pipeline run.
-    type: string
-    default: "dev:alpha"
-
-jobs:
-  # This job is an example of an integration testing job.
-  # This job should execute a command from your orb and verify
-  # the output is as expected, otherwise the job should fail.
-  #
-  # Rename this job and add more as needed.
-  #
-  integration-test-1:
-    executor: heroku/default
-    steps:
-      - checkout
-      - heroku/install
-      - run:
-          name: Check if Heroku is installed
-          command: |
-            if [[ $(command -v heroku) == "" ]]; then
-              echo " Heroku is not installed! "; exit 1;
-            else
-              echo Heroku successfully installed.
-            fi
-  integration-test-review:
-    executor: heroku/default
-    steps:
-      - run:
-          name: Setup sample project
-          command: |
-            git clone --depth 1 https://github.com/CircleCI-Public/sample-python-cfd.git --branch main ~/project
-            git branch $CIRCLE_BRANCH
-      - run:
-          name: Bundle sample project
-          working_directory: ~/
-          command: tar -czvf sample-python-cfd.tar.gz ~/project
-      - store_artifacts:
-          path: ~/sample-python-cfd.tar.gz
-      - heroku/create-review:
-          artifact-pattern: "*.tar.gz"
-          pipeline: 389303dc-8a12-4f25-b943-8f7c6dbbdcaa
-          circleci-api-key: CIRCLE_TOKEN
-  integration-test-deploy:
-    executor: heroku/default
-    steps:
-      - run:
-          name: Setup sample project
-          command: |
-            git clone --depth 1 https://github.com/CircleCI-Public/sample-python-cfd.git --branch main ~/project
-            git branch $CIRCLE_BRANCH
-      - heroku/install
-      - heroku/check-authentication
-      - heroku/deploy-via-git:
-          force: true
-          app-name: sample-python-cfd
+filters: &filters
+  tags:
+    only: /.*/
 
 workflows:
-  # This `lint-pack_validate_publish-dev` workflow will run on any commit.
-  lint_pack-validate_publish-dev:
-    unless: << pipeline.parameters.run-integration-tests >>
+  lint-pack:
     jobs:
-      - orb-tools/lint
-      # pack your orb YAML files to a single orb.yml
-      # validate the orb.yml file to ensure it is well-formed
+      - orb-tools/lint:
+          filters: *filters
       - orb-tools/pack:
-          requires:
-            - orb-tools/lint
-
-      # release dev version of orb, for testing & possible publishing.
-      # orb will be published as dev:alpha and dev:${CIRCLE_SHA1:0:7}.
-      # requires a CircleCI API token to be stored as CIRCLE_TOKEN (default)
-      # https://circleci.com/docs/2.0/managing-api-tokens
-      # store CIRCLE_TOKEN as a project env var or Contexts resource
-      # if using Contexts, add your context below
-      - orb-tools/publish-dev:
+          filters: *filters
+      - orb-tools/review:
+          filters: *filters
+      - shellcheck/check:
+          filters: *filters
+      - orb-tools/publish:
           orb-name: circleci/heroku
-          context: orb-publisher
+          vcs-type: << pipeline.project.type >>
           requires:
-            - orb-tools/pack
-
-      # trigger an integration workflow to test the
-      # dev:${CIRCLE_SHA1:0:7} version of your orb
-      - orb-tools/trigger-integration-tests-workflow:
-          name: trigger-integration-dev
+            [orb-tools/lint, orb-tools/review, orb-tools/pack, shellcheck/check]
+          # Use a context to hold your publishing token.
           context: orb-publisher
-          requires:
-            - orb-tools/publish-dev
-
-  # This `integration-tests_prod-release` workflow will only run
-  # when the run-integration-tests pipeline parameter is set to true.
-  # It is meant to be triggered by the "trigger-integration-tests-workflow"
-  # job, and run tests on <your orb>@dev:${CIRCLE_SHA1:0:7}.
-  integration-tests_prod-release:
-    when: << pipeline.parameters.run-integration-tests >>
-    jobs:
-      # your integration test jobs go here: essentially, run all your orb's
-      # jobs and commands to ensure they behave as expected. or, run other
-      # integration tests of your choosing
-
-      # an example job
-      - integration-test-1
-      - integration-test-deploy:
-          context: heroku-orb
-      - integration-test-review:
-          context:
-            - heroku-orb
-            - orb-publisher
-      # publish a semver version of the orb. relies on
-      # the commit subject containing the text "[semver:patch|minor|major|skip]"
-      # as that will determine whether a patch, minor or major
-      # version will be published or if publishing should
-      # be skipped.
-      # e.g. [semver:patch] will cause a patch version to be published.
-      - orb-tools/dev-promote-prod-from-commit-subject:
-          orb-name: circleci/heroku
-          context: orb-publisher
-          add-pr-comment: true
-          bot-token-variable: GHI_TOKEN
-          bot-user: orb-publisher
-          fail-if-semver-not-indicated: true
-          publish-version-tag: false
-          requires:
-            - integration-test-1
-            - integration-test-deploy
-          filters:
-            branches:
-              only: master
+          filters: *filters
+      # Triggers the next workflow in the Orb Development Kit.
+      - orb-tools/continue:
+          pipeline-number: << pipeline.number >>
+          vcs-type: << pipeline.project.type >>
+          requires: [orb-tools/publish]
+          filters: *filters
