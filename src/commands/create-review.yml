@@ -11,7 +11,7 @@ parameters:
     description: Heroku pipeline to dpeloy with (UUID).
   heroku-api-key:
     type: env_var_name
-    description: Environment variable containing the Heroku API key
+    description: The name of the environment variable containing your Heroku API Key. (Do not change)
     default: HEROKU_API_KEY
   circleci-api-key:
     type: env_var_name
