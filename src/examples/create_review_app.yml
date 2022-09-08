@@ -1,5 +1,5 @@
 description: >
-  A sample job that deploys a review app to Herou, that does not run on the main
+  A sample job that deploys a review app to Heroku, that does not run on the main
   "deployed" branch. Assumes that your CircleCI token is stored in $CIRCLECI_API_KEY
   and Heroku's API key under $HEROKU_API_KEY.
 usage:

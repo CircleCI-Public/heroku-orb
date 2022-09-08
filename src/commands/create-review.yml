@@ -8,7 +8,7 @@ parameters:
     description: RegEx or filename of artifact to deploy to Heroku.
   pipeline:
     type: string
-    description: Heroku pipeline to dpeloy with (UUID).
+    description: Heroku pipeline to deploy with (UUID).
   heroku-api-key:
     type: env_var_name
     description: The name of the environment variable containing your Heroku API Key. (Do not change)
