@@ -47,21 +47,15 @@ steps:
   - run:
       no_output_timeout: << parameters.no_output_timeout >>
       name: Deploy branch or tag to Heroku via git push
-      command: |
-        if << parameters.force >>;then
-          force="-f"
-        fi
-
-        heroku_url="https://heroku:$<< parameters.api-key >>@git.heroku.com/<< parameters.app-name >>.git"
-
-        if [ -n "<< parameters.branch >>" ]; then
-          git push $force $heroku_url << parameters.branch >>:main
-        elif [ -n "<< parameters.tag >>" ]; then
-          git push $force $heroku_url << parameters.tag >>^{}:main
-        else
-          echo "No branch or tag found."
-          exit 1
-        fi
+      environment:
+        PARAM_APP_NAME: <<parameters.app-name>>
+        PARAM_MAINTENANCE_MODE: <<parameters.maintenance-mode>>
+        PARAM_HEROKU_API_KEY: <<parameters.api-key>>
+        PARAM_DEPLOY_BRANCH: <<parameters.branch>>
+        PARAM_DEPLOY_TAG: <<parameters.tag>>
+        PARAM_FORCE_PUSH: <<parameters.force>>
+        PARAM_NO_OUTPUT_TIMEOUT: <<parameters.no_output_timeout>>
+      command: <<include(scripts/deploy-via-git.sh)>>
   - when:
       condition: << parameters.maintenance-mode >>
       steps:
