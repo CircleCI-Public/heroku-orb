@@ -19,7 +19,7 @@ parameters:
     type: boolean
     default: false
   api-key:
-    description: The name of the environment variable containing your Heroku API Key.
+    description: The name of the environment variable containing your Heroku API Key. (Do not change)
     type: env_var_name
     default: HEROKU_API_KEY
   no_output_timeout:
@@ -34,7 +34,9 @@ steps:
   - run:
       no_output_timeout: << parameters.no_output_timeout >>
       name: Push Docker image to Heroku
-      command: |
-        heroku container:push -a <<parameters.app-name>> \
-        <<# parameters.recursive >>--recursive<</ parameters.recursive >> \
-        <<# parameters.process-types>><<parameters.process-types>><</ parameters.process-types>>
+      environment:
+        PARAM_APP_NAME: <<parameters.app-name>>
+        PARAM_HEROKU_API_KEY: <<parameters.api-key>>
+        PARAM_PROCESS_TYPES: <<parameters.process-types>>
+        PARAM_RECURSIVE: <<parameters.recursive>>
+      command: <<include(scripts/push-docker-image.sh)>>
