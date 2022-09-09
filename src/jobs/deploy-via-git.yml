@@ -3,17 +3,12 @@ description: >
 parameters:
   app-name:
     description:
-      "The name of your Heroku App.
-      For backwards compatibility the literal value
-      `$HEROKU_APP_NAME` is the default, so you can
-      easily use this command by setting an environment
-      variable called HEROKU_APP_NAME"
+      "Add the name of your application to an environment variable with this name."
     type: string
-    default: $HEROKU_APP_NAME
+    default: HEROKU_APP_NAME
   maintenance-mode:
     description:
-      "Use this to automatically enable maintenance mode before pre-deploy steps
-        and have it disabled after post-deploy steps have been run."
+      Use this to automatically enable maintenance mode before pre-deploy steps and have it disabled after post-deploy steps have been run.
     type: boolean
     default: false
   pre-deploy:
@@ -33,13 +28,13 @@ parameters:
     type: env_var_name
     default: HEROKU_API_KEY
   branch:
-    type: string
+    type: env_var_name
     description: Deploy the given branch. The default value is your current branch.
-    default: "$CIRCLE_BRANCH"
+    default: CIRCLE_BRANCH
   tag:
-    type: string
+    type: env_var_name
     description: Deploy the given tag. The default value is your current tag.
-    default: "$CIRCLE_TAG"
+    default: CIRCLE_TAG
   force:
     type: boolean
     description: Whether or not to force the git push (i.e. `git push -f`). Defaults to false.
