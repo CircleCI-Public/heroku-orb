@@ -16,13 +16,13 @@ parameters:
   circleci-api-key:
     type: env_var_name
     description: Environment variable containing the Heroku API key
-    default: CIRCLECI_API_KEY
+    default: CIRCLE_TOKEN
 steps:
   - run:
       command: <<include(scripts/create-review.sh)>>
       name: Create new Heroku Review app
       environment:
-        C_API_KEY: $<<parameters.circleci-api-key>>
-        API_KEY: $<<parameters.heroku-api-key>>
-        ARTIFACT_PATTERN: <<parameters.artifact-pattern>>
-        HEROKU_PIPELINE: <<parameters.pipeline>>
+        PARAM_CIRCLE_TOKEN: <<parameters.circleci-api-key>>
+        PARAM_HEROKU_KEY: <<parameters.heroku-api-key>>
+        PARAM_ARTIFACT_PATTERN: <<parameters.artifact-pattern>>
+        PARAM_HEROKU_PIPELINE: <<parameters.pipeline>>

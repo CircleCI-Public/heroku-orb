@@ -64,6 +64,7 @@ workflows:
           filters: *filters
       - integration-test-review:
           filters: *filters
+          context: orb-publisher
       - integration-test-deploy:
           filters: *filters
       - orb-tools/pack:
