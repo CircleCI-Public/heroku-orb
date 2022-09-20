@@ -1,7 +1,7 @@
 #!/bin/bash
 
-CIRCLE_TOKEN_FETCHED=${!PARAM_CIRCLE_TOKEN}
-HEROKU_KEY_FETCHED=${!PARAM_HEROKU_KEY}
+CIRCLE_TOKEN_FETCHED=$(eval echo "${PARAM_CIRCLE_TOKEN}")
+HEROKU_KEY_FETCHED=$(eval echo "${PARAM_HEROKU_KEY}")
 
 if [ -z "$CIRCLE_TOKEN_FETCHED" ]; then
   echo "CircleCI token is not set"

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PARAM_APP_NAME=${!PARAM_APP_NAME}
+PARAM_APP_NAME=$(eval echo "${PARAM_APP_NAME}")
 PARAM_HEROKU_API_KEY=${!PARAM_HEROKU_API_KEY}
 
 if [ "$PARAM_FORCE_PUSH" == "1" ];then
