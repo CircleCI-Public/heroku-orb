@@ -31,7 +31,7 @@ jobs:
       - run:
           name: Setup sample project
           command: |
-            git clone --depth 1 https://github.com/CircleCI-Public/sample-python-cfd.git --branch main ~/project
+            git clone https://github.com/CircleCI-Public/sample-python-cfd.git --branch main ~/project
             git branch $CIRCLE_BRANCH
       - run:
           name: Bundle sample project
@@ -49,7 +49,7 @@ jobs:
       - run:
           name: Setup sample project
           command: |
-            git clone --depth 1 https://github.com/CircleCI-Public/sample-python-cfd.git --branch main ~/project
+            git clone https://github.com/CircleCI-Public/sample-python-cfd.git --branch main ~/project
             git branch $CIRCLE_BRANCH
       - heroku/install
       - heroku/check-authentication
