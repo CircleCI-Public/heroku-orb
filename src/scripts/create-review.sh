@@ -13,20 +13,31 @@ if [ -z "$HEROKU_KEY_FETCHED" ]; then
 fi
 
 function get_artifacts {
-  artifact_request=$(curl --request GET \
+  artifact_res_tmpfile=$(mktemp)
+  artifact_request=$(curl -s -o "${artifact_res_tmpfile}" -w "%{http_code}" --retry 5 \
       --url "https://circleci.com/api/v2/project/gh/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/${CIRCLE_BUILD_NUM}/artifacts" \
       --header "Circle-Token: ${CIRCLE_TOKEN_FETCHED}")
+  artifact_results=$(cat "${artifact_res_tmpfile}")
+  if [ "${artifact_request}" != "200" ]; then
+    echo "Error fetching artifacts"
+    echo
+    echo "$artifact_results"
+    exit 1
+  fi
 
-  for row in $(echo "${artifact_request}" | jq -c '.items[]'); do
+  for row in $(echo "${artifact_results}" | jq -c '.items[]'); do
     _jq() {
      echo "${row}" | jq -r "${1}"
     }
-    if [[ $(_jq '.path') == "$PARAM_ARTIFACT_PATTERN" ]]; then
+    # shellcheck disable=SC2053
+    if [[ $(_jq '.path') == $PARAM_ARTIFACT_PATTERN ]]; then
       ARTIFACT_LOCATION=$(_jq '.url')
       echo "Using ${ARTIFACT_LOCATION} as artifact."
       return 0
     fi
     echo "No artifacts found!"
+    echo
+    echo "$artifact_results"
     return 1
   done
 }
