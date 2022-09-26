@@ -1,15 +1,9 @@
 description: >
-  Replace this text with a description for this command.
-  # What will this command do?
-  # Descriptions should be short, simple, and clear.
+  Use Git to push the changes of the current tag or branch to Heroku for deployment.
 parameters:
   app-name:
     description:
-      "The name of your Heroku App.
-      For backwards compatibility the literal value
-      `$HEROKU_APP_NAME` is the default, so you can
-      easily use this command by setting an environment
-      variable called HEROKU_APP_NAME"
+      The name of your Heroku app. May also refer to an environment variable.
     type: string
     default: $HEROKU_APP_NAME
   maintenance-mode:
@@ -22,12 +16,12 @@ parameters:
     default: HEROKU_API_KEY
   branch:
     type: string
-    description: Deploy the given branch. The default value is your current branch.
-    default: "$CIRCLE_BRANCH"
+    description: Deploy the given branch. The default value is your current branch. Accepts strings which may contain an environment variable.
+    default: $CIRCLE_BRANCH
   tag:
     type: string
     description: Deploy the given tag. The default value is your current tag.
-    default: "$CIRCLE_TAG"
+    default: $CIRCLE_TAG
   force:
     type: boolean
     description: Whether or not to force the git push (i.e. `git push -f`). Defaults to false.
@@ -47,21 +41,15 @@ steps:
   - run:
       no_output_timeout: << parameters.no_output_timeout >>
       name: Deploy branch or tag to Heroku via git push
-      command: |
-        if << parameters.force >>;then
-          force="-f"
-        fi
-
-        heroku_url="https://heroku:$<< parameters.api-key >>@git.heroku.com/<< parameters.app-name >>.git"
-
-        if [ -n "<< parameters.branch >>" ]; then
-          git push $force $heroku_url << parameters.branch >>:main
-        elif [ -n "<< parameters.tag >>" ]; then
-          git push $force $heroku_url << parameters.tag >>^{}:main
-        else
-          echo "No branch or tag found."
-          exit 1
-        fi
+      environment:
+        PARAM_APP_NAME: <<parameters.app-name>>
+        PARAM_MAINTENANCE_MODE: <<parameters.maintenance-mode>>
+        PARAM_HEROKU_API_KEY: <<parameters.api-key>>
+        PARAM_DEPLOY_BRANCH: <<parameters.branch>>
+        PARAM_DEPLOY_TAG: <<parameters.tag>>
+        PARAM_FORCE_PUSH: <<parameters.force>>
+        PARAM_NO_OUTPUT_TIMEOUT: <<parameters.no_output_timeout>>
+      command: <<include(scripts/deploy-via-git.sh)>>
   - when:
       condition: << parameters.maintenance-mode >>
       steps:

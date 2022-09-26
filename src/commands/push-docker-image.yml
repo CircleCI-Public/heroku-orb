@@ -3,11 +3,7 @@ description: >
 parameters:
   app-name:
     description:
-      "The name of your Heroku App.
-      For backwards compatibility the literal value
-      `$HEROKU_APP_NAME` is the default, so you can
-      easily use this command by setting an environment
-      variable called HEROKU_APP_NAME"
+      The name of your Heroku app. May also refer to an environment variable.
     type: string
     default: $HEROKU_APP_NAME
   process-types:
@@ -34,7 +30,9 @@ steps:
   - run:
       no_output_timeout: << parameters.no_output_timeout >>
       name: Push Docker image to Heroku
-      command: |
-        heroku container:push -a <<parameters.app-name>> \
-        <<# parameters.recursive >>--recursive<</ parameters.recursive >> \
-        <<# parameters.process-types>><<parameters.process-types>><</ parameters.process-types>>
+      environment:
+        PARAM_APP_NAME: <<parameters.app-name>>
+        PARAM_HEROKU_API_KEY: <<parameters.api-key>>
+        PARAM_PROCESS_TYPES: <<parameters.process-types>>
+        PARAM_RECURSIVE: <<parameters.recursive>>
+      command: <<include(scripts/push-docker-image.sh)>>

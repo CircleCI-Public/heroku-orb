@@ -1,0 +1,86 @@
+version: 2.1
+orbs:
+  heroku: circleci/heroku@dev:<<pipeline.git.revision>>
+  orb-tools: circleci/orb-tools@11.1
+filters: &filters
+  tags:
+    only: /.*/
+jobs:
+  # This job is an example of an integration testing job.
+  # This job should execute a command from your orb and verify
+  # the output is as expected, otherwise the job should fail.
+  #
+  # Rename this job and add more as needed.
+  #
+  integration-test-1:
+    executor: heroku/default
+    steps:
+      - checkout
+      - heroku/install
+      - run:
+          name: Check if Heroku is installed
+          command: |
+            if [[ $(command -v heroku) == "" ]]; then
+              echo " Heroku is not installed! "; exit 1;
+            else
+              echo Heroku successfully installed.
+            fi
+  integration-test-review:
+    executor: heroku/default
+    steps:
+      - run:
+          name: Setup sample project
+          command: |
+            git clone https://github.com/CircleCI-Public/sample-python-cfd.git --branch main ~/project
+            git branch $CIRCLE_BRANCH
+      - run:
+          name: Bundle sample project
+          working_directory: ~/
+          command: tar -czvf sample-python-cfd.tar.gz ~/project
+      - store_artifacts:
+          path: ~/sample-python-cfd.tar.gz
+      - heroku/create-review:
+          artifact-pattern: "*.tar.gz"
+          pipeline: 389303dc-8a12-4f25-b943-8f7c6dbbdcaa
+          circleci-api-key: CIRCLE_TOKEN
+  integration-test-deploy:
+    executor: heroku/default
+    steps:
+      - run:
+          name: Setup sample project
+          command: |
+            git clone https://github.com/CircleCI-Public/sample-python-cfd.git --branch main ~/project
+            git branch $CIRCLE_BRANCH
+      - heroku/install
+      - heroku/check-authentication
+      - heroku/deploy-via-git:
+          force: true
+          app-name: sample-python-cfd
+workflows:
+  test-deploy:
+    jobs:
+      # Make sure to include "filters: *filters" in every test job you want to run as part of your deployment.
+      - integration-test-1:
+          filters: *filters
+      - integration-test-review:
+          filters: *filters
+          context: orb-publisher
+      - integration-test-deploy:
+          filters: *filters
+      - orb-tools/pack:
+          filters: *filters
+      - orb-tools/publish:
+          orb-name: circleci/heroku
+          vcs-type: << pipeline.project.type >>
+          pub-type: production
+          requires:
+            - orb-tools/pack
+            - integration-test-1
+            - integration-test-review
+            - integration-test-deploy
+          context: orb-publisher
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v[0-9]+\.[0-9]+\.[0-9]+$/

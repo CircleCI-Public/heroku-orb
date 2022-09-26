@@ -4,7 +4,7 @@ docker:
   - image: 'cimg/base:<<parameters.tag>>'
 parameters:
   tag:
-    default: stable
+    default: current
     description: >
       Pick a specific cimg/base tag:
       https://hub.docker.com/r/cimg/base/tags
