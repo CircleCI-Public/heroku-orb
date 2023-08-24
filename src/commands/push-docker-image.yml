@@ -23,6 +23,10 @@ parameters:
     description:
       "Allows you to specify the no_output_timeout for the `git push` to heroku. Defaults to 10m."
     default: "10m"
+  context-path:
+    type: string
+    default: ""
+    description: Path to use as build context (defaults to Dockerfile dir)
 steps:
   - run:
       name: Login to Heroku Docker image registry
@@ -35,4 +39,5 @@ steps:
         PARAM_HEROKU_API_KEY: <<parameters.api-key>>
         PARAM_PROCESS_TYPES: <<parameters.process-types>>
         PARAM_RECURSIVE: <<parameters.recursive>>
+        PARAM_CONTEXT_PATH: <<parameters.context-path>>
       command: <<include(scripts/push-docker-image.sh)>>
