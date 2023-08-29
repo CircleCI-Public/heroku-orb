@@ -12,11 +12,11 @@ parameters:
   heroku-api-key:
     type: env_var_name
     description: The name of the environment variable containing your Heroku API Key.
-    default: HEROKU_API_KEY
+    default: $HEROKU_API_KEY
   circleci-api-key:
     type: env_var_name
     description: Environment variable containing the Heroku API key
-    default: CIRCLE_TOKEN
+    default: $CIRCLE_TOKEN
 steps:
   - run:
       command: <<include(scripts/create-review.sh)>>

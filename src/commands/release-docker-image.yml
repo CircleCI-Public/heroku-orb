@@ -13,7 +13,7 @@ parameters:
   api-key:
     description: The name of the environment variable containing your Heroku API Key.
     type: env_var_name
-    default: HEROKU_API_KEY
+    default: $HEROKU_API_KEY
   no_output_timeout:
     type: string
     description:
