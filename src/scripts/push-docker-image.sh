@@ -3,7 +3,7 @@
 PARAM_HEROKU_API_KEY="${!PARAM_HEROKU_API_KEY}"
 
 if [ "$PARAM_RECURSIVE" == "1" ];then
-  set -- "$@" --resursive
+  set -- "$@" --recursive
 fi
 
 set -x
