@@ -9,7 +9,7 @@ usage:
     heroku_deploy:
       jobs:
         - heroku/deploy-via-git:
-            pre-steps:
+            pre-deploy:
               - run: command-that-run-before-deploying
-            post-steps:
+            post-deploy:
               - run: your-database-migration-command
