@@ -13,9 +13,9 @@ heroku_url="https://heroku:${PARAM_HEROKU_API_KEY}@git.heroku.com/${PARAM_APP_NA
 echo "$heroku_url" > /tmp/orblog.txt
 
 if [ -n "$PARAM_DEPLOY_BRANCH" ]; then
-  git push $force "$heroku_url" "$PARAM_DEPLOY_BRANCH:main"
+  git push "$force" "$heroku_url" "$PARAM_DEPLOY_BRANCH:main"
 elif [ -n "$PARAM_DEPLOY_TAG" ]; then
-  git push $force "$heroku_url" "${PARAM_DEPLOY_TAG}^{}:main"
+  git push "$force" "$heroku_url" "${PARAM_DEPLOY_TAG}^{}:main"
 else
   echo "No branch or tag found."
   exit 1
